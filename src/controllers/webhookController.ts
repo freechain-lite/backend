@@ -12,7 +12,7 @@ export const tradeCreated = asyncHandler(
     async (req: Request, res: Response) => {
         const { data, timestamp, type } = await useData('TRADE_CREATED', req);
         // ...do something with the event
-
+        console.log(data);
         const { buyer, seller, offer, unitPrice, quantity, currency } = data;
 
         const buyerAddress = buyer.address;
@@ -41,7 +41,16 @@ export const bidCreated = asyncHandler(
     async (req: Request, res: Response) => {
         const { data, timestamp, type } = await useData('BID_CREATED', req);
         // ...do something with the event
+        console.log(data);
+        res.status(200).send()
+    }
+);
 
+export const accountCreated = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { data, timestamp, type } = await useData('ACCOUNT_CREATED', req);
+        // ...do something with the event
+        console.log(data);
         res.status(200).send()
     }
 );
