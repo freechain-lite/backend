@@ -2,19 +2,18 @@ import User from "../db/models/userModel";
 
 export class UserService {
     static async createUser(address: string, points: number) {
-        const newUser = new User({
+        const user = await User.create({
             address,
             points
         });
-        return await newUser.save();
     }
 
     static async checkIfUserExistsAndCreateIfUserDoesNotExist(address: string) {
-        const user =  await User.findOne({
+        const user = await User.findOne({
             address
         });
-        if(!user) {
-            return await this.createUser(address, 0);
+        if (!user) {
+            return await this.createUser(address, 10);
         }
     }
 
@@ -29,5 +28,38 @@ export class UserService {
         }, {
             points: newPoints
         });
+    }
+
+    static async referUser(address: string, referredAddress: string) {
+        this.checkIfUserExistsAndCreateIfUserDoesNotExist(referredAddress);
+        this.updateUser(address, 20);
+    }
+
+    static async tradeCreated(buyerAddress: string, sellerAddress: string) {
+        this.checkIfUserExistsAndCreateIfUserDoesNotExist(buyerAddress);
+        this.checkIfUserExistsAndCreateIfUserDoesNotExist(sellerAddress);
+
+        this.updateUser(buyerAddress, 20);
+        this.updateUser(sellerAddress, 20);
+    }
+
+    static async offerCreated(address: string, takerAddress?: string) {
+        this.checkIfUserExistsAndCreateIfUserDoesNotExist(address);
+        this.updateUser(address, 5);
+
+        if (takerAddress) {
+            this.checkIfUserExistsAndCreateIfUserDoesNotExist(takerAddress);
+            this.updateUser(takerAddress, 5);
+        }
+    }
+
+    static async bidCreated(address: string, takerAddress?: string) {
+        this.checkIfUserExistsAndCreateIfUserDoesNotExist(address);
+        this.updateUser(address, 5);
+
+        if (takerAddress) {
+            this.checkIfUserExistsAndCreateIfUserDoesNotExist(takerAddress);
+            this.updateUser(takerAddress, 5);
+        }
     }
 }
