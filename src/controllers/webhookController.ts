@@ -1,41 +1,50 @@
 import { Events, parseAndVerifyRequest } from '@nft/webhook';
+import asyncHandler from "express-async-handler";
 import { Request, Response } from 'express';
 import { UserService } from '../services/user.service';
 
 export const homeHandler = (req: Request, res: Response) => {
-    res.send('Hello World!');
+    res.send('Hello, Welcome to Freechain!');
 };
 
 
-export const tradeCreated = async (req: Request, res: Response) => {
-    const { data, timestamp, type } = await useData('TRADE_CREATED', req);
-    // ...do something with the event
-    
-    const { buyer, seller, offer, unitPrice, quantity, currency } = data;
+export const tradeCreated = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { data, timestamp, type } = await useData('TRADE_CREATED', req);
+        // ...do something with the event
 
-    const buyerAddress = buyer.address;
-    const sellerAddress = seller.address;
+        const { buyer, seller, offer, unitPrice, quantity, currency } = data;
 
-    UserService.checkIfUserExistsAndCreateIfUserDoesNotExist(buyerAddress);
-    UserService.checkIfUserExistsAndCreateIfUserDoesNotExist(sellerAddress);
+        const buyerAddress = buyer.address;
+        const sellerAddress = seller.address;
 
-    res.status(200).send()
-}
+        UserService.checkIfUserExistsAndCreateIfUserDoesNotExist(buyerAddress);
+        UserService.checkIfUserExistsAndCreateIfUserDoesNotExist(sellerAddress);
 
-export const offerCreated = async (req: Request, res: Response) => {
-    const { data, timestamp, type } = await useData('OFFER_CREATED', req);
-    // ...do something with the event
-    console.log(data);
-  
-    res.status(200).send()
-}
+        res.status(200).send()
+    }
+);
 
-export const bidCreated = async (req: Request, res: Response) => {
-    const { data, timestamp, type } = await useData('BID_CREATED', req);
-    // ...do something with the event
-  
-    res.status(200).send()
-}
+
+export const offerCreated = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { data, timestamp, type } = await useData('OFFER_CREATED', req);
+        // ...do something with the event
+        console.log(data);
+
+        res.status(200).send()
+    }
+);
+
+
+export const bidCreated = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { data, timestamp, type } = await useData('BID_CREATED', req);
+        // ...do something with the event
+
+        res.status(200).send()
+    }
+);
 
 
 
