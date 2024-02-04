@@ -4,6 +4,7 @@ const userSchema = new Schema(
     {
         address: {
             type: String,
+            unique: true,
             required: [true, "Please add an address"],
         },
         points: {
@@ -14,7 +15,8 @@ const userSchema = new Schema(
     },
     {
         timestamps: true,
-    }
+        collection: "freechain",
+    },
 );
 
 const User = model("User", userSchema);
